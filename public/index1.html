@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>E-Heritage Vault - Odisha Tourism</title>
+
+<style>
+/* -------------- YOUR ORIGINAL CSS (NO CHANGES) ---------------- */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background: linear-gradient(to bottom right, #fff7ed, #fef3c7);
+    min-height: 100vh;
+}
+
+.page { display: none; }
+.page.active { display: block; }
+
+/* Header */
+header {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+}
+
+.header-content {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #9a3412;
+}
+
+nav {
+    display: flex;
+    gap: 1.5rem;
+    font-size: 0.875rem;
+    align-items: center;
+}
+
+nav a {
+    color: #374151;
+    text-decoration: none;
+}
+nav a:hover { color: #ea580c; }
+
+.search-box {
+    display: flex;
+    align-items: center;
+    background: white;
+    border: 2px solid #e5e7eb;
+    border-radius: 9999px;
+    padding: 0.5rem 1rem;
+}
+
+.search-box input {
+    border: none;
+    outline: none;
+    background: transparent;
+    width: 200px;
+}
+
+.user-info { display: flex; gap: 1rem; align-items: center; }
+.welcome-text { font-weight: 500; color: #374151; }
+
+.logout-btn {
+    background: #ef4444;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 8px;
+    border: none;
+}
+.logout-btn:hover { background: #dc2626; }
+
+/* Hero */
+.hero {
+    position: relative;
+    height: 500px;
+    overflow: hidden;
+}
+.hero-bg {
+    position: absolute;
+    inset: 0;
+    background-image: url('https://images.unsplash.com/photo-1582510003544-4d00b7f74220?w=1920&q=80');
+    background-size: cover;
+    background-position: center;
+}
+.hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.4), rgba(0,0,0,0.6));
+}
+.hero-content {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 120px;
+}
+.hero-box {
+    background: rgba(255,255,255,0.9);
+    padding: 2rem;
+    border-radius: 1rem;
+    max-width: 600px;
+}
+
+/* Main Content */
+.container { max-width: 1400px; margin: 2rem auto; padding: 2rem; }
+.title { text-align: center; font-size: 1.875rem; margin-bottom: 3rem; }
+
+/* Cards */
+.cards-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    justify-content: center;
+}
+.card {
+    background: white;
+    padding: 1rem;
+    border-radius: 12px;
+    text-align: center;
+}
+
+/* Buttons */
+.btn {
+    background: #111827;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 999px;
+    border: none;
+    cursor: pointer;
+}
+.btn:hover { background: #1f2937; }
+
+/* Discovery Sections */
+.section { margin-top: 3rem; }
+.scroll-container { display: flex; gap: 1rem; overflow-x: auto; }
+.discovery-card {
+    min-width: 140px;
+    padding: 20px;
+    background: #e5e7eb;
+    border-radius: 12px;
+    text-align: center;
+}
+
+/* Destinations Page */
+.back-btn {
+    background: none;
+    border: none;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-bottom: 1rem;
+}
+
+/* Destination cards */
+.dest-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex;
+    margin-bottom: 2rem;
+}
+.dest-image {
+    width: 300px;
+    height: 230px;
+    object-fit: cover;
+}
+.dest-info {
+    padding: 1rem;
+}
+
+/* Services */
+.services-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+}
+
+.service-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1rem;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+.service-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+}
+</style>
+
+</head>
+
+<body>
+
+<!-- 🔒 LOGIN PROTECTION -->
+<script>
+if (!sessionStorage.getItem("isLoggedIn")) {
+    alert("Please login first!");
+    window.location.href = "login.html";
+}
+</script>
+
+<!-- =========================================================
+   HOME PAGE
+========================================================= -->
+<div id="homePage" class="page active">
+
+<header>
+    <div class="header-content">
+        <h1 class="logo">E-Heritage Vault</h1>
+
+        <nav>
+            <a href="#">Find Your Site</a>
+
+            <div class="search-box">
+                <input type="text" placeholder="Search monuments...">
+                <span>🔍</span>
+            </div>
+
+            <a href="#">📍</a>
+
+            <div class="user-info">
+                <span class="welcome-text" id="welcomeText">Welcome</span>
+                <button class="logout-btn" onclick="logout()">Logout</button>
+            </div>
+        </nav>
+    </div>
+</header>
+
+<div class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-overlay"></div>
+
+    <div class="hero-content">
+        <div class="hero-box">
+            <h2>Heritage</h2>
+            <h3>Treasures Await</h3>
+            <h3>Around You</h3>
+            <p>Discover ancient temples, forts & archaeological wonders.</p>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+
+    <h2 class="title">Let's Find Your Perfect Heritage Adventure</h2>
+
+    <div class="cards-grid">
+        <div class="card">
+            <img src="Odisha-Ancient-Monuments.webp" class="dest-image">
+            <h3>Find monuments near you</h3>
+        </div>
+
+        <div class="card">
+            <img src="Direction.webp" class="dest-image">
+            <h3>Get instant directions</h3>
+        </div>
+    </div>
+
+    <div style="text-align:center; margin-top:2rem;">
+        <button class="btn" onclick="showPage('destinations')">Find Monuments Near Me</button>
+        <button class="btn" onclick="showPage('services')">Find Services Near Me</button>
+    </div>
+
+    <div class="section">
+        <h3>Discovery by Region</h3>
+        <div class="scroll-container">
+            <div class="discovery-card">North</div>
+            <div class="discovery-card">South</div>
+            <div class="discovery-card">East</div>
+            <div class="discovery-card">West</div>
+        </div>
+    </div>
+    
+
+</div>
+
+</div> <!-- END HOME PAGE -->
+
+
+<!-- =========================================================
+   DESTINATIONS PAGE
+========================================================= -->
+<div id="destinationsPage" class="page">
+
+<header>
+    <div class="header-content">
+        <h1 class="logo">E-Heritage Vault</h1>
+
+        <nav>
+            <div class="search-box">
+                <input type="text" placeholder="Search monuments...">
+                <span>🔍</span>
+            </div>
+
+            <div class="user-info">
+                <span class="welcome-text" id="welcomeText2">Welcome</span>
+                <button class="logout-btn" onclick="logout()">Logout</button>
+            </div>
+        </nav>
+    </div>
+</header>
+
+<div class="container">
+
+    <button class="back-btn" onclick="showPage('home')">← Back</button>
+
+    <h2 class="title" style="text-align:left;">Destinations Near You</h2>
+
+    <div class="dest-card">
+        <img src="Konark-Sun-Temple.webp" class="dest-image">
+        <div class="dest-info">
+            <h3>Konark Sun Temple</h3>
+            <p>13th-century UNESCO World Heritage Site</p>
+        </div>
+    </div>
+
+    <div class="dest-card">
+        <img src="udaigiri.webp" class="dest-image">
+        <div class="dest-info">
+            <h3>Udayagiri Caves</h3>
+            <p>Ancient Jain rock-cut caves</p>
+        </div>
+    </div>
+
+</div>
+
+</div> <!-- END DESTINATIONS -->
+
+
+<!-- =========================================================
+   SERVICES PAGE
+========================================================= -->
+<div id="servicesPage" class="page">
+
+<header>
+    <div class="header-content">
+        <h1 class="logo">E-Heritage Vault</h1>
+
+        <nav>
+            <div class="search-box">
+                <input type="text" placeholder="Search services...">
+                <span>🔍</span>
+            </div>
+
+            <div class="user-info">
+                <span class="welcome-text" id="welcomeText3">Welcome</span>
+                <button class="logout-btn" onclick="logout()">Logout</button>
+            </div>
+        </nav>
+    </div>
+</header>
+
+<div class="container">
+
+    <button class="back-btn" onclick="showPage('home')">← Back</button>
+
+    <h2 class="title" style="text-align:left;">Services Near You</h2>
+
+    <div class="services-grid">
+
+        <div class="service-card">
+            <div class="service-icon">🏨</div>
+            <h3>Hotels</h3>
+            <p>Comfortable stays near heritage sites</p>
+            <button class="btn" style="width: 100%;" onclick="showSection('hotels')">Explore</button>
+        </div>
+
+        <div class="service-card">
+            <div class="service-icon">🍽️</div>
+            <h3>Restaurants</h3>
+            <p>Enjoy authentic Odia cuisine</p>
+            <button class="btn" style="width: 100%;" onclick="showSection('hotels')">Explore</button>
+        </div>
+
+    </div>
+
+</div>
+
+</div>
+
+
+<!-- =========================================================
+   SCRIPT LOGIC
+========================================================= -->
+<script>
+function showPage(pageName) {
+    document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+    document.getElementById(pageName + "Page").classList.add("active");
+    window.scrollTo(0, 0);
+}
+
+window.onload = function() {
+    let username = sessionStorage.getItem("loggedInUser");
+    document.getElementById("welcomeText").innerText = `Welcome, ${username}`;
+    document.getElementById("welcomeText2").innerText = `Welcome, ${username}`;
+    document.getElementById("welcomeText3").innerText = `Welcome, ${username}`;
+};
+
+function logout() {
+    sessionStorage.clear();
+    alert("Logged out successfully!");
+    window.location.href = "index.html";
+}
+</script>
+
+</body>
+</html>

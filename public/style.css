@@ -1,0 +1,412 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+/* Navbar */
+.navbar {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 40px;
+  z-index: 100;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(6px);
+  color: white;
+}
+
+.navbar nav a {
+  margin: 0 15px;
+  text-decoration: none;
+  color: white;
+  font-size: 16px;
+}
+
+.navbar .logo {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+/* Navbar Login & Signup Buttons */
+.login-btn, .signup-btn {
+    padding: 8px 16px;
+    border: 2px solid #0056b3;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    color: #0056b3;
+    background: white;
+    margin-left: 10px;
+    text-decoration: none;
+    display: inline-block;
+    transition: 0.3s ease-in-out;
+}
+
+/* Signup Button (Green theme) */
+.signup-btn {
+    border-color: #2e8b2e;
+    color: #2e8b2e;
+}
+
+/* Hover Effects */
+.login-btn:hover {
+    background: #0056b3;
+    color: white;
+}
+
+.signup-btn:hover {
+    background: #2e8b2e;
+    color: white;
+}
+
+
+/* Hero Section */
+.hero {
+  width: 100%;
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(60%);
+}
+
+.hero-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: white;
+  max-width: 65%;
+}
+
+.hero-content h1 {
+  font-size: 42px;
+  margin-bottom: 15px;
+}
+
+.hero-content p {
+  font-size: 17px;
+  margin-bottom: 20px;
+}
+
+.explore-btn {
+  display: inline-block;
+  padding: 10px 25px;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 25px;
+  color: white;
+  font-weight: 600;
+  text-decoration: none;
+  backdrop-filter: blur(4px);
+}
+
+/* Stats Section */
+.stats {
+  display: flex;
+  justify-content: center;
+  gap: 60px;
+  padding: 50px 0;
+  background: white;
+}
+
+.stat-box {
+  text-align: center;
+}
+
+.stat-box h2 {
+  font-size: 34px;
+  font-weight: bold;
+  color: black;
+}
+
+.stat-box p {
+  font-size: 14px;
+  color: gray;
+}
+
+/* Why Section */
+.why-section {
+  display: flex;
+  padding: 80px 100px;
+  justify-content: space-between;
+  align-items: center;
+  gap: 50px;
+}
+
+.why-left h2 {
+  font-size: 32px;
+  margin-bottom: 10px;
+}
+
+.tag {
+  color: goldenrod;
+  font-size: 18px;
+  font-weight: 600;
+  margin: 10px 0;
+}
+
+.info {
+  max-width: 500px;
+  font-size: 16px;
+  color: #555;
+  line-height: 1.6;
+}
+
+/* Right Section Mock UI */
+.why-right {
+  display: grid;
+  grid-template-columns: repeat(2, 180px);
+  gap: 10px;
+}
+
+.map-demo {
+  width: 360px;
+  grid-column: span 2;
+  border-radius: 12px;
+}
+
+.planner-box {
+  height: 120px;
+  border-radius: 10px;
+}
+
+.pink { background: #ffb3b3; }
+.yellow { background: #ffe680; }
+.cyan { background: #b3ecff; }
+
+/* Featured Section */
+.featured {
+  padding: 60px 50px;
+  text-align: center;
+}
+
+.featured h2 {
+  margin-bottom: 30px;
+  font-size: 28px;
+}
+
+.monument-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+  padding: 0 40px;
+}
+
+.card {
+  background: #e0e0e0;
+  height: 230px;
+  border-radius: 10px;
+}
+
+.mission-container {
+    max-width: 1200px;
+    margin: auto;
+    padding: 80px 20px;
+    font-family: "Poppins", sans-serif;
+}
+
+.mission-text h2 {
+    font-size: 32px;
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+.mission-text p {
+    font-size: 16px;
+    line-height: 1.7;
+    margin-bottom: 8px;
+    color: #444;
+}
+
+.community-section {
+    display: flex;
+    gap: 50px;
+    margin-top: 60px;
+    align-items: flex-start;
+}
+
+.image-column {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.placeholder-box {
+    width: 220px;
+    height: 150px;
+    background: #ddd;
+    border-radius: 8px;
+}
+
+.text-column {
+    max-width: 600px;
+}
+
+.hashtag {
+    color: #c5a889;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.text-column h3 {
+    font-size: 26px;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.text-column p {
+    font-size: 15px;
+    margin-bottom: 10px;
+    line-height: 1.7;
+    color: #444;
+}
+
+.join-btn {
+    background: black;
+    color: white;
+    border: none;
+    padding: 10px 26px;
+    border-radius: 20px;
+    font-size: 15px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: 0.3s;
+}
+
+.join-btn:hover {
+    opacity: 0.8;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .community-section {
+        flex-direction: column;
+    }
+
+    .placeholder-box {
+        width: 100%;
+        height: 180px;
+    }
+}
+
+.hero {
+    height: 100vh;
+    background: url("images/KonarkSunTemple.jpg") no-repeat center center/cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: white;
+}
+.featured {
+    padding: 80px 50px;
+    background: white;
+}
+
+.featured h2 {
+    font-size: 32px;
+    margin-bottom: 30px;
+}
+
+.monuments {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 25px;
+}
+
+.card {
+    background: #f4f4f4;
+    border-radius: 10px;
+    overflow: hidden;
+    text-align: center;
+    padding-bottom: 10px;
+}
+
+.card img {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+}
+
+.card p {
+    padding: 10px;
+    font-size: 18px;
+    font-weight: 500;
+}
+.travel-widget {
+  width: 350px;
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  padding: 20px;
+}
+
+.mini-map {
+  width: 100%;
+  height: 180px;
+  background: url('images/odisha-map.jpg');
+  background-size: cover;
+  background-position: center;
+  border-radius: 12px;
+  margin-bottom: 15px;
+}
+
+.search-bar {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  margin-bottom: 15px;
+}
+
+.travel-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.travel-buttons button {
+  padding: 12px;
+  border: none;
+  background: #ffcb66;
+  border-radius: 10px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.travel-buttons button:hover {
+  background: #ffb835;
+}
+
+.community-section {
+    display: flex;
+    gap: 40px;
+    align-items: center;
+    margin-top: 30px;
+}
+
+.image-column {
+    width: 350px;
+}
+
+.community-img {
+    width: 100%;
+    height: auto;
+    border-radius: 12px;
+    object-fit: cover;
+    border: 3px solid #eee;
+}
+
+

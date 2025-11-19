@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login | Odisha Heritage</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: url("images/konark-bg.jpg") center/cover no-repeat;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.login-container {
+    background: rgba(255, 255, 255, 0.92);
+    padding: 30px;
+    border-radius: 12px;
+    width: 350px;
+    text-align: center;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+}
+input,button { width:100%; padding:12px; margin:10px 0; border-radius:6px; }
+button { background:#0a66c2; color:white; border:none; font-weight:bold; }
+button:hover { background:#084a8c; }
+</style>
+</head>
+
+<body>
+<div class="login-container">
+    <h2>Login</h2>
+
+    <input type="email" id="email" placeholder="Email">
+    <input type="password" id="password" placeholder="Password">
+
+    <button onclick="loginUser()">Login</button>
+
+    <p>Don't have an account? <a href="signup.html">Sign Up</a></p>
+</div>
+
+<script>
+function loginUser() {
+    let email = document.getElementById("email").value.trim();
+    let pass  = document.getElementById("password").value;
+
+    if (!email || !pass) {
+        alert("Please fill all fields");
+        return;
+    }
+
+    let userData = localStorage.getItem("user");
+
+    if (!userData) {
+        alert("No account found! Please sign up.");
+        window.location.href = "signup.html";
+        return;
+    }
+
+    let user = JSON.parse(userData);
+
+    if (email === user.email && pass === user.password) {
+        sessionStorage.setItem("isLoggedIn", "true");
+        sessionStorage.setItem("loggedInUser", user.name);
+
+        alert("Login successful!");
+        window.location.href = "index1.html";
+    } else {
+        alert("Incorrect email or password!");
+    }
+}
+</script>
+</body>
+</html>
