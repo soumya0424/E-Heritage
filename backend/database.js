@@ -1,7 +1,6 @@
-const mysql = require('mysql2/promise');
+ const mysql = require('mysql2/promise');
 const config = require('./config');
 
-// Create connection pool
 const pool = mysql.createPool({
     host: config.database.host,
     user: config.database.user,
@@ -12,12 +11,10 @@ const pool = mysql.createPool({
     connectionLimit: 10,
     maxIdle: 10,
     idleTimeout: 60000,
-    queueLimit: 0,
-    enableKeepAlive: true,
-    keepAliveInitialDelay: 0
+    queueLimit: 0
 });
 
-// Test database connection
+// Test connection
 const testConnection = async () => {
     try {
         const connection = await pool.getConnection();
@@ -27,10 +24,11 @@ const testConnection = async () => {
         connection.release();
     } catch (err) {
         console.error('❌ Database connection failed:', err.message);
-        process.exit(1);
+        console.error('💡 Make sure MySQL is running and credentials are correct in .env');
     }
 };
 
 testConnection();
 
 module.exports = pool;
+

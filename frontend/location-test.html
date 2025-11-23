@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Location Test - E-Heritage</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+        }
+        .btn:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+        }
+        .result {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 5px;
+            margin-top: 20px;
+            display: none;
+        }
+        .result.show {
+            display: block;
+        }
+        .label {
+            font-weight: bold;
+            color: #667eea;
+            margin-top: 10px;
+        }
+        .value {
+            color: #333;
+            margin: 5px 0;
+        }
+        .error {
+            background: #ffe6e6;
+            color: #d63031;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+            display: none;
+        }
+        .error.show {
+            display: block;
+        }
+        .loading {
+            text-align: center;
+            color: #667eea;
+            display: none;
+        }
+        .loading.show {
+            display: block;
+        }
+        .map-link {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 10px 20px;
+            background: #28a745;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+        .map-link:hover {
+            background: #218838;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📍 E-Heritage Location Test</h1>
+        
+        <button class="btn" onclick="getLocation()">
+            🗺️ Get My Current Location
+        </button>
+
+        <div class="loading" id="loading">
+            ⏳ Getting your location...
+        </div>
+
+        <div class="error" id="error"></div>
+
+        <div class="result" id="result">
+            <div class="label">✅ Location Retrieved Successfully!</div>
+            
+            <div class="label">📌 Latitude:</div>
+            <div class="value" id="latitude">-</div>
+            
+            <div class="label">📌 Longitude:</div>
+            <div class="value" id="longitude">-</div>
+            
+            <div class="label">🎯 Accuracy:</div>
+            <div class="value" id="accuracy">-</div>
+            
+            <div class="label">📍 Approximate Address:</div>
+            <div class="value" id="address">Loading...</div>
+            
+            <a class="map-link" id="mapLink" href="#" target="_blank">
+                🗺️ View on Google Maps
+            </a>
+        </div>
+    </div>
+
+    <script>
+        function getLocation() {
+            // Hide previous results
+            document.getElementById('result').classList.remove('show');
+            document.getElementById('error').classList.remove('show');
+            document.getElementById('loading').classList.add('show');
+
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    showPosition,
+                    showError,
+                    {
+                        enableHighAccuracy: true,
+                        timeout: 10000,
+                        maximumAge: 0
+                    }
+                );
+            } else {
+                showError({code: 0, message: "Geolocation is not supported by this browser."});
+            }
+        }
+
+        function showPosition(position) {
+            const latitude = position.coords.latitude;
+            const longitude = position.coords.longitude;
+            const accuracy = position.coords.accuracy;
+
+            // Hide loading
+            document.getElementById('loading').classList.remove('show');
+            
+            // Show result
+            document.getElementById('result').classList.add('show');
+            document.getElementById('latitude').textContent = latitude.toFixed(6);
+            document.getElementById('longitude').textContent = longitude.toFixed(6);
+            document.getElementById('accuracy').textContent = `${accuracy.toFixed(2)} meters`;
+            
+            // Google Maps link
+            const mapUrl = `https://www.google.com/maps?q=${latitude},${longitude}`;
+            document.getElementById('mapLink').href = mapUrl;
+
+            // Get approximate address using reverse geocoding
+            getReverseGeocode(latitude, longitude);
+
+            // Log to console
+            console.log('📍 Location Data:');
+            console.log('Latitude:', latitude);
+            console.log('Longitude:', longitude);
+            console.log('Accuracy:', accuracy, 'meters');
+        }
+
+        function showError(error) {
+            document.getElementById('loading').classList.remove('show');
+            document.getElementById('error').classList.add('show');
+            
+            let errorMessage = '';
+            switch(error.code) {
+                case error.PERMISSION_DENIED:
+                    errorMessage = "❌ You denied the request for Geolocation. Please allow location access in your browser settings.";
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    errorMessage = "❌ Location information is unavailable. Please check your device's location settings.";
+                    break;
+                case error.TIMEOUT:
+                    errorMessage = "❌ The request to get your location timed out. Please try again.";
+                    break;
+                case 0:
+                    errorMessage = "❌ Geolocation is not supported by your browser. Please use a modern browser like Chrome, Firefox, or Edge.";
+                    break;
+                default:
+                    errorMessage = "❌ An unknown error occurred while getting your location.";
+                    break;
+            }
+            
+            document.getElementById('error').textContent = errorMessage;
+            console.error('Location Error:', error);
+        }
+
+        function getReverseGeocode(lat, lon) {
+            // Using Nominatim (OpenStreetMap) for reverse geocoding - FREE, no API key!
+            fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`)
+                .then(response => response.json())
+                .then(data => {
+                    const address = data.display_name || 'Address not available';
+                    document.getElementById('address').textContent = address;
+                })
+                .catch(error => {
+                    document.getElementById('address').textContent = 'Could not fetch address';
+                    console.error('Reverse geocoding error:', error);
+                });
+        }
+    </script>
+</body>
+</html>

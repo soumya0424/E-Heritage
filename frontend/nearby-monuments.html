@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nearby Monuments - E-Heritage</title>
+    <style>
+        /* Add your styles here */
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .monument-card {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .distance { color: #667eea; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h1>📍 Monuments Near You</h1>
+    <button onclick="findNearbyMonuments()">Find Nearby Monuments</button>
+    <div id="results"></div>
+
+    <script>
+        function findNearbyMonuments() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const lat = position.coords.latitude;
+                        const lon = position.coords.longitude;
+                        
+                        // Call backend API
+                        fetch(`http://localhost:3000/api/monuments/nearby?latitude=${lat}&longitude=${lon}&radius=100`)
+                            .then(response => response.json())
+                            .then(data => {
+                                displayMonuments(data.data);
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                                alert('Error fetching nearby monuments');
+                            });
+                    },
+                    (error) => {
+                        alert('Error getting location: ' + error.message);
+                    }
+                );
+            } else {
+                alert('Geolocation is not supported by your browser');
+            }
+        }
+
+        function displayMonuments(monuments) {
+            const resultsDiv = document.getElementById('results');
+            
+            if (monuments.length === 0) {
+                resultsDiv.innerHTML = '<p>No monuments found within 100km of your location.</p>';
+                return;
+            }
+
+            let html = '<h2>Found ' + monuments.length + ' monuments:</h2>';
+            
+            monuments.forEach(monument => {
+                html += `
+                    <div class="monument-card">
+                        <h3>${monument.name}</h3>
+                        <p>${monument.description}</p>
+                        <p><strong>City:</strong> ${monument.city}</p>
+                        <p class="distance">📍 ${monument.distanceText}</p>
+                        <p><strong>Rating:</strong> ${monument.rating} ⭐</p>
+                        <a href="https://www.google.com/maps/dir/?api=1&destination=${monument.latitude},${monument.longitude}" target="_blank">
+                            Get Directions
+                        </a>
+                    </div>
+                `;
+            });
+            
+            resultsDiv.innerHTML = html;
+        }
+    </script>
+</body>
+</html>
