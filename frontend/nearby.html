@@ -1,0 +1,90 @@
+// Find this function in nearby.html and replace it
+
+function displayHotels(hotels) {
+    const grid = document.getElementById('hotelsGrid');
+    const section = document.getElementById('hotelsSection');
+    const loading = document.getElementById('loading');
+
+    loading.style.display = 'none';
+    section.style.display = 'block';
+
+    grid.innerHTML = hotels.map(hotel => `
+        <div class="place-card">
+            ${hotel.photo ? `
+                <img src="${hotel.photo}" 
+                     alt="${hotel.name}" 
+                     style="width: 100%; height: 200px; object-fit: cover; border-radius: 8px; margin-bottom: 15px;">
+            ` : ''}
+            
+            <div class="place-header">
+                <div>
+                    <div class="place-name">${hotel.name}</div>
+                    <div class="place-details">
+                        <div class="place-address">${hotel.address}</div>
+                        <div class="place-price">${hotel.priceLevel}</div>
+                        ${hotel.distance ? `
+                            <div style="color: #3498db; margin-top: 5px;">
+                                📍 ${hotel.distance} km away
+                            </div>
+                        ` : ''}
+                        ${hotel.totalRatings ? `
+                            <div style="color: #95a5a6; font-size: 12px; margin-top: 3px;">
+                                ${hotel.totalRatings} reviews
+                            </div>
+                        ` : ''}
+                    </div>
+                </div>
+                <div class="place-rating">⭐ ${hotel.rating}</div>
+            </div>
+
+            ${hotel.isOpen !== undefined ? `
+                <div style="display: inline-block; padding: 5px 10px; background: ${hotel.isOpen ? '#d4edda' : '#f8d7da'}; 
+                     color: ${hotel.isOpen ? '#155724' : '#721c24'}; border-radius: 15px; font-size: 12px; margin-bottom: 15px;">
+                    ${hotel.isOpen ? '✅ Open now' : '🔒 Closed'}
+                </div>
+            ` : ''}
+
+            <div class="booking-section">
+                <div class="booking-label">📲 Book this hotel:</div>
+                <div class="booking-buttons">
+                    <a href="${hotel.bookingLinks.google}" 
+                       target="_blank" 
+                       class="btn-primary-booking"
+                       onclick="trackBookingClick('Google', '${hotel.name}')">
+                        Find Best Prices on Google
+                    </a>
+                </div>
+
+                <div class="quick-links">
+                    <div class="quick-links-label">Or book directly on:</div>
+                    <div class="platform-links">
+                        ${hotel.bookingLinks.makemytrip ? `
+                            <a href="${hotel.bookingLinks.makemytrip}" 
+                               target="_blank" 
+                               class="platform-link"
+                               onclick="trackBookingClick('MakeMyTrip', '${hotel.name}')">
+                                MakeMyTrip
+                            </a>
+                        ` : ''}
+                        ${hotel.bookingLinks.booking ? `
+                            <a href="${hotel.bookingLinks.booking}" 
+                               target="_blank" 
+                               class="platform-link"
+                               onclick="trackBookingClick('Booking.com', '${hotel.name}')">
+                                Booking.com
+                            </a>
+                        ` : ''}
+                        ${hotel.bookingLinks.goibibo ? `
+                            <a href="${hotel.bookingLinks.goibibo}" 
+                               target="_blank" 
+                               class="platform-link"
+                               onclick="trackBookingClick('Goibibo', '${hotel.name}')">
+                                Goibibo
+                            </a>
+                        ` : ''}
+                    </div>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}

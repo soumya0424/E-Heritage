@@ -2,59 +2,68 @@ const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
 
-// Initialize Express app FIRST
+// Import routes
+const monumentRoutes = require('./monumentRoutes');
+const userRoutes = require('./userRoutes');
+const travelRoutes = require('./travelRoutes');
+
 const app = express();
 
-// CORS Configuration - Must be BEFORE routes
+// ===== FIXED: Allow all origins for development =====
 app.use(cors({
-    origin: '*',
+    origin: '*',  // Allow all origins
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
+// ====================================================
 
-// Body Parser Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Import ONLY the routes you actually have
-const monumentRoutes = require('./monumentRoutes');
-const userRoutes = require('./userRoutes');
+// ===== ADDED: Serve static images from /images folder =====
+app.use('/images', express.static('images'));
+// ===========================================================
 
-// Simple health check
+// Health check
 app.get('/health', (req, res) => {
     res.json({
         status: 'OK',
         message: 'E-Heritage API is running',
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
+        googleApiKey: process.env.GOOGLE_PLACES_API_KEY ? 'Configured ✅' : 'Missing ❌'
     });
 });
 
-// API information endpoint
+// API information
 app.get('/api', (req, res) => {
     res.json({
         message: 'E-Heritage Vault API - Odisha Edition',
-        version: '1.0.0',
+        version: '2.0.0',
         state: {
             name: 'Odisha',
             code: 'OR'
         },
         endpoints: {
+            health: '/health',
             monuments: '/api/monuments',
             monument_stats: '/api/monuments/stats',
-            monument_nearby: '/api/monuments/nearby',
             monument_detail: '/api/monuments/:id',
-            users: '/api/users',
-            health: '/health'
+            users_signup: '/api/users/signup',
+            users_login: '/api/users/login',
+            travel_hotels: '/api/travel/hotels/:monumentId',
+            travel_restaurants: '/api/travel/restaurants/:monumentId',
+            travel_nearby: '/api/travel/nearby/:monumentId'
         },
         documentation: 'Visit endpoints for more information'
     });
 });
 
-// Attach routers
+// Register routes
 app.use('/api/monuments', monumentRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/travel', travelRoutes);
 
-// 404 Handler
+// 404 handler
 app.use((req, res) => {
     res.status(404).json({
         success: false,
@@ -63,27 +72,37 @@ app.use((req, res) => {
     });
 });
 
-// Error Handler
+// Error handler
 app.use((err, req, res, next) => {
-    console.error('Error:', err.stack);
+    console.error('Error:', err);
     res.status(500).json({
         success: false,
         message: 'Internal server error',
-        error: process.env.NODE_ENV === 'development' ? err.message : undefined
+        error: err.message
     });
 });
 
-// Start the server
+// Start server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log('================================');
-    console.log(`✅ Server running on http://localhost:${PORT}`);
+    console.log(`✅ E-Heritage API Running`);
+    console.log(`🌐 URL: http://localhost:${PORT}`);
+    console.log(`📍 State: Odisha`);
     console.log('================================');
-    console.log('📍 Available Endpoints:');
-    console.log(`   Health Check:  http://localhost:${PORT}/health`);
-    console.log(`   API Info:      http://localhost:${PORT}/api`);
-    console.log(`   Monuments:     http://localhost:${PORT}/api/monuments`);
-    console.log(`   Nearby:        http://localhost:${PORT}/api/monuments/nearby?latitude=20.2961&longitude=85.8245&radius=100`);
-    console.log(`   Users:         http://localhost:${PORT}/api/users`);
+    console.log('📋 Available Endpoints:');
+    console.log(`  GET  /health`);
+    console.log(`  GET  /api`);
+    console.log(`  GET  /api/monuments`);
+    console.log(`  GET  /api/monuments/stats`);
+    console.log(`  POST /api/users/signup`);
+    console.log(`  POST /api/users/login`);
+    console.log(`  GET  /api/travel/hotels/:monumentId`);
+    console.log(`  GET  /api/travel/restaurants/:monumentId`);
+    console.log(`  GET  /api/travel/nearby/:monumentId`);
+    console.log('================================');
+    console.log('🔑 Google Places API:', process.env.GOOGLE_PLACES_API_KEY ? 'Configured ✅' : 'Missing ❌');
+    console.log('🖼️  Static Images: http://localhost:' + PORT + '/images/');
+    console.log('🌐 CORS: Enabled for all origins (Development Mode)');
     console.log('================================');
 });

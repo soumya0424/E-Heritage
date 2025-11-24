@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 // Monuments data with coordinates
+// ===== UPDATED: All image paths now point to backend static server =====
 const monuments = [
     {
         id: 1,
@@ -11,7 +12,7 @@ const monuments = [
         state: "Odisha",
         latitude: 19.8876,
         longitude: 86.0944,
-        image: "Konark-Sun-Temple.jpg",
+        image: "http://localhost:3000/images/Konark-Sun-Temple.webp",
         type: "Temple",
         unesco: true,
         rating: 4.8
@@ -24,7 +25,7 @@ const monuments = [
         state: "Odisha",
         latitude: 20.2380,
         longitude: 85.8360,
-        image: "Lingaraj-Temple-min.jpg",
+        image: "http://localhost:3000/images/Lingaraj-Temple-min.webp",
         type: "Temple",
         unesco: false,
         rating: 4.7
@@ -37,7 +38,7 @@ const monuments = [
         state: "Odisha",
         latitude: 19.8048,
         longitude: 85.8182,
-        image: "jagannathtemple.jpg",
+        image: "http://localhost:3000/images/jagannathtemple.jpg",
         type: "Temple",
         unesco: false,
         rating: 4.9
@@ -50,7 +51,7 @@ const monuments = [
         state: "Odisha",
         latitude: 20.2623,
         longitude: 85.7792,
-        image: "udaigiri.jpg",
+        image: "http://localhost:3000/images/udaigiri.webp",
         type: "Cave",
         unesco: false,
         rating: 4.5
@@ -63,7 +64,7 @@ const monuments = [
         state: "Odisha",
         latitude: 20.2500,
         longitude: 85.8320,
-        image: "rajarani-temple-th-century-hindu-temple-built-pancha-ratha-style-rajarani-temple-th-century-hindu-temple-built-251379169.jpg",
+        image: "http://localhost:3000/images/rajarani-temple-th-century-hindu-temple-built-pancha-ratha-style-rajarani-temple-th-century-hindu-temple-built-251379169.jpg",
         type: "Temple",
         unesco: false,
         rating: 4.6

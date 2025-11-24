@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nearby Accommodations - E-Heritage Vault</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(to bottom right, #fff7ed, #fef3c7);
+            min-height: 100vh;
+        }
+        
+        header {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #9a3412;
+        }
+        
+        .back-btn {
+            padding: 0.5rem 1rem;
+            background: #ea580c;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .back-btn:hover {
+            background: #c2410c;
+        }
+        
+        main {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+        
+        h1 {
+            font-size: 2rem;
+            color: #9a3412;
+            margin-bottom: 1rem;
+        }
+        
+        .subtitle {
+            color: #6b7280;
+            margin-bottom: 2rem;
+        }
+        
+        .disclaimer {
+            background: #fef3c7;
+            border-left: 4px solid #ea580c;
+            padding: 1rem;
+            margin-bottom: 2rem;
+            border-radius: 8px;
+        }
+        
+        .disclaimer p {
+            color: #9a3412;
+            font-size: 0.9rem;
+        }
+        
+        .loading, .error {
+            text-align: center;
+            padding: 3rem;
+            font-size: 1.2rem;
+        }
+        
+        .loading {
+            color: #6b7280;
+        }
+        
+        .error {
+            color: #dc2626;
+        }
+        
+        .facilities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .facility-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .facility-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .facility-card h3 {
+            color: #9a3412;
+            margin-bottom: 0.75rem;
+            font-size: 1.1rem;
+        }
+        
+        .facility-card p {
+            color: #6b7280;
+            margin: 0.5rem 0;
+            font-size: 0.9rem;
+        }
+        
+        .distance {
+            font-weight: bold;
+            color: #ea580c;
+            margin-top: 0.75rem;
+        }
+        
+        .type-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background: #fef3c7;
+            color: #9a3412;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+        }
+        
+        /* Booking Buttons */
+        .booking-section {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #e5e7eb;
+        }
+        
+        .primary-booking-btn {
+            display: block;
+            width: 100%;
+            padding: 0.75rem 1.5rem;
+            background: #4285F4;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            text-align: center;
+            transition: background 0.2s;
+            margin-bottom: 0.75rem;
+        }
+        
+        .primary-booking-btn:hover {
+            background: #3367D6;
+        }
+        
+        .secondary-links {
+            text-align: center;
+            font-size: 0.85rem;
+            color: #6b7280;
+            margin-bottom: 0.75rem;
+        }
+        
+        .secondary-links a {
+            color: #ea580c;
+            text-decoration: none;
+            margin: 0 0.5rem;
+            font-size: 0.8rem;
+        }
+        
+        .secondary-links a:hover {
+            text-decoration: underline;
+        }
+        
+        .directions-btn {
+            display: inline-block;
+            width: 100%;
+            margin-top: 0.5rem;
+            padding: 0.6rem 1rem;
+            background: #10b981;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            text-align: center;
+            transition: background 0.2s;
+        }
+        
+        .directions-btn:hover {
+            background: #059669;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo">🏨 Nearby Accommodations</div>
+            <button class="back-btn" onclick="history.back()">← Back</button>
+        </div>
+    </header>
+
+    <main>
+        <h1 id="pageTitle">Finding Hotels & Stays Near You...</h1>
+        <p class="subtitle" id="subtitle"></p>
+        
+        <div class="disclaimer">
+            <p>ℹ️ <strong>Booking Notice:</strong> You will be redirected to external booking platforms. E-Heritage Vault does not process bookings or payments directly. Links open the specific hotel on each platform.</p>
+        </div>
+        
+        <div id="facilitiesContainer" class="loading">
+            Loading nearby accommodations...
+        </div>
+    </main>
+
+    <script>
+        // Get coordinates from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const lat = parseFloat(urlParams.get('lat'));
+        const lon = parseFloat(urlParams.get('lon'));
+        const monumentName = urlParams.get('name') || 'your location';
+
+        console.log('Stay page loaded');
+        console.log('Coordinates:', lat, lon);
+
+        // Update page title
+        document.getElementById('pageTitle').textContent = `Accommodations Near ${decodeURIComponent(monumentName)}`;
+        document.getElementById('subtitle').textContent = `Showing hotels within 10km radius`;
+
+        // Haversine distance calculation
+        function calculateDistance(lat1, lon1, lat2, lon2) {
+            const R = 6371;
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLon = (lon2 - lon1) * Math.PI / 180;
+            const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                      Math.sin(dLon/2) * Math.sin(dLon/2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            return R * c;
+        }
+
+        // Generate booking links - IMPROVED VERSION
+        function generateBookingLinks(place) {
+            const name = place.tags.name || 'Hotel';
+            const encodedName = encodeURIComponent(name);
+            const encodedCity = encodeURIComponent('Bhubaneswar');
+            
+            // Get today's date and tomorrow for default booking
+            const today = new Date();
+            const tomorrow = new Date(today);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            
+            const checkin = today.toISOString().split('T')[0];
+            const checkout = tomorrow.toISOString().split('T')[0];
+            
+            // Clean hotel name for URL-friendly format
+            const cleanName = name.replace(/[^\w\s]/gi, '').replace(/\s+/g, '-').toLowerCase();
+            
+            return {
+                // Primary: Google Search with book intent
+                google: `https://www.google.com/search?q=${encodedName}+Bhubaneswar+hotel+booking`,
+                
+                // Booking.com - Most reliable deep link
+                booking: `https://www.booking.com/searchresults.html?ss=${encodedName},+Bhubaneswar,+Odisha,+India&checkin=${checkin}&checkout=${checkout}&group_adults=2&no_rooms=1`,
+                
+                // Goibibo - City search with hotel name
+                goibibo: `https://www.goibibo.com/hotels/hotels-in-bhubaneswar-ct/?hquery=${encodedName}&ci=${checkin}&co=${checkout}`,
+                
+                // MakeMyTrip - Bhubaneswar hotels with search
+                makemytrip: `https://www.makemytrip.com/hotels/hotel-listing/?city=CTBBI&checkin=${checkin.replace(/-/g, '')}&checkout=${checkout.replace(/-/g, '')}&roomStayQualifier=2e0e&locusId=CTBBI&locusType=city&searchText=${encodedName}`,
+                
+                // Agoda - Alternative
+                agoda: `https://www.agoda.com/search?city=6557&checkIn=${checkin}&checkOut=${checkout}&rooms=1&adults=2&cid=-1&searchText=${encodedName}+Bhubaneswar`,
+                
+                // Directions
+                directions: `https://www.google.com/maps/search/?api=1&query=${place.lat},${place.lon}`
+            };
+        }
+
+        // Track booking clicks
+        function trackBookingClick(platform, placeName) {
+            console.log(`Booking click: ${platform} - ${placeName}`);
+        }
+
+        // Load nearby accommodations
+        async function loadAccommodations() {
+            const container = document.getElementById('facilitiesContainer');
+            
+            if (!lat || !lon || isNaN(lat) || isNaN(lon)) {
+                container.className = 'error';
+                container.innerHTML = `
+                    <h2>⚠️ Location Not Provided</h2>
+                    <p>Unable to get location coordinates.</p>
+                    <button class="back-btn" onclick="history.back()" style="margin-top: 1rem;">Go Back</button>
+                `;
+                return;
+            }
+
+            try {
+                const query = `
+                    [out:json][timeout:25];
+                    (
+                      node["tourism"="hotel"](around:10000,${lat},${lon});
+                      node["tourism"="guest_house"](around:10000,${lat},${lon});
+                      node["tourism"="hostel"](around:10000,${lat},${lon});
+                      way["tourism"="hotel"](around:10000,${lat},${lon});
+                    );
+                    out body;
+                `;
+                
+                const response = await fetch('https://overpass-api.de/api/interpreter', {
+                    method: 'POST',
+                    body: query
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Failed to fetch data');
+                }
+                
+                const data = await response.json();
+                console.log('Fetched accommodations:', data.elements.length);
+                
+                const accommodations = data.elements
+                    .filter(el => el.tags && el.tags.name)
+                    .map(place => ({
+                        ...place,
+                        distance: calculateDistance(lat, lon, place.lat, place.lon),
+                        bookingLinks: generateBookingLinks(place)
+                    }))
+                    .sort((a, b) => a.distance - b.distance)
+                    .slice(0, 30);
+                
+                displayAccommodations(accommodations);
+                
+            } catch (error) {
+                console.error('Error fetching accommodations:', error);
+                container.className = 'error';
+                container.innerHTML = `
+                    <h2>Error Loading Accommodations</h2>
+                    <p>${error.message}</p>
+                    <button class="back-btn" onclick="loadAccommodations()" style="margin-top: 1rem;">Retry</button>
+                `;
+            }
+        }
+
+        // Display accommodations
+        function displayAccommodations(accommodations) {
+            const container = document.getElementById('facilitiesContainer');
+            
+            if (!accommodations || accommodations.length === 0) {
+                container.className = 'error';
+                container.innerHTML = '<h2>No accommodations found nearby</h2><p>Try expanding your search radius</p>';
+                return;
+            }
+            
+            container.className = 'facilities-grid';
+            container.innerHTML = accommodations.map(place => {
+                let icon = '🏨';
+                let type = 'Hotel';
+                
+                if (place.tags.tourism === 'guest_house') { icon = '🏡'; type = 'Guest House'; }
+                else if (place.tags.tourism === 'hostel') { icon = '🏠'; type = 'Hostel'; }
+                
+                return `
+                    <div class="facility-card">
+                        <h3>${icon} ${place.tags.name}</h3>
+                        <span class="type-badge">${type}</span>
+                        ${place.tags['addr:street'] ? `<p>📍 ${place.tags['addr:street']}</p>` : ''}
+                        ${place.tags.phone ? `<p>📞 ${place.tags.phone}</p>` : ''}
+                        ${place.tags.email ? `<p>✉️ ${place.tags.email}</p>` : ''}
+                        ${place.tags.website ? `<p>🌐 <a href="${place.tags.website}" target="_blank" style="color: #ea580c;">Website</a></p>` : ''}
+                        ${place.tags.stars ? `<p>⭐ ${place.tags.stars} Star</p>` : ''}
+                        <p class="distance">📏 ${place.distance.toFixed(2)} km away</p>
+                        
+                        <div class="booking-section">
+                            <a href="${place.bookingLinks.google}" 
+                               target="_blank"
+                               class="primary-booking-btn"
+                               onclick="trackBookingClick('google', '${place.tags.name}')">
+                                🔍 Search & Book on Google
+                            </a>
+                            
+                            <div class="secondary-links">
+                                <p style="margin-bottom: 0.5rem; font-weight: 600;">Or book directly:</p>
+                                <a href="${place.bookingLinks.booking}" 
+                                   target="_blank"
+                                   onclick="trackBookingClick('booking', '${place.tags.name}')">
+                                    Booking.com
+                                </a> |
+                                <a href="${place.bookingLinks.makemytrip}" 
+                                   target="_blank"
+                                   onclick="trackBookingClick('makemytrip', '${place.tags.name}')">
+                                    MakeMyTrip
+                                </a> |
+                                <a href="${place.bookingLinks.goibibo}" 
+                                   target="_blank"
+                                   onclick="trackBookingClick('goibibo', '${place.tags.name}')">
+                                    Goibibo
+                                </a> |
+                                <a href="${place.bookingLinks.agoda}" 
+                                   target="_blank"
+                                   onclick="trackBookingClick('agoda', '${place.tags.name}')">
+                                    Agoda
+                                </a>
+                            </div>
+                            
+                            <a href="${place.bookingLinks.directions}" 
+                               target="_blank" 
+                               class="directions-btn">
+                                🗺️ Get Directions
+                            </a>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Load on page load
+        document.addEventListener('DOMContentLoaded', loadAccommodations);
+    </script>
+</body>
+</html>

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Odisha Heritage Explorer</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- Navbar -->
+<header class="navbar">
+  <div class="logo">OdishaHeritage</div>
+  <nav>
+    <a href="#">Home</a>
+    <a href="#">Blog</a>
+    <a href="#">About Us</a>
+    <a href="#">Contact</a>
+  </nav>
+  <div class="buttons">
+    <a href="login.html" class="login-btn">Login</a>
+    <a href="signup.html" class="signup-btn">Sign Up</a>
+  </div>
+</header>
+
+<!-- Hero Section -->
+<div class="hero">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/1/1f/Konark_Sun_Temple_Wheel.jpg" class="hero-img">
+
+  <div class="hero-content">
+    <h1>Discover Odisha's Hidden Heritage Treasures</h1>
+    <p>Explore ancient temples, monuments, and forgotten stories of Odisha. Experience the timeless beauty of its architecture and culture.</p>
+    <a href="monuments.html" class="explore-btn">Explore Now →</a>
+  </div>
+</div>
+
+
+<!-- Stats Section -->
+<section class="stats">
+  <div class="stat-box">
+    <h2>1,200+</h2>
+    <p>Monuments digitally preserved</p>
+  </div>
+
+  <div class="stat-box">
+    <h2>500+</h2>
+    <p>Local Contributors</p>
+  </div>
+
+  <div class="stat-box">
+    <h2>50+</h2>
+    <p>Hidden Gems Mapped</p>
+  </div>
+</section>
+
+<!-- Why Choose Section -->
+<section class="why-section">
+    
+  <div class="why-left">
+    <h2>Why Choose E-Heritage Vault?</h2>
+    <p class="tag">#Smart Travel Planning</p>
+    <p class="info">
+      Find the best routes, nearby accommodations, and local restaurants instantly.
+      Our AI-powered trip planner creates personalized itineraries based on your
+      interests and schedule.
+    </p>
+  </div>
+
+  <div class="why-right">
+
+    <div class="travel-widget">
+      <div class="mini-map"></div>
+
+      <input type="text" placeholder="Search places in Odisha..." class="search-bar">
+
+      <div class="travel-buttons">
+        <button>Nearby Hotels ¨</button>
+        <button>Restaurants ›</button>
+      </div>
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- Featured Monuments -->
+
+  <section class="featured">
+  <h2>Latest Featured Monuments</h2>
+
+  <div class="monuments">
+
+    <div class="card">
+      <img src="images/jagannathtemple.jpg" alt="Jagannath Temple">
+      <p>Jagannath Temple, Puri</p>
+    </div>
+
+    <div class="card">
+      <img src="images/dhauli.jpg" alt="Dhauli Stupa">
+      <p>Dhauli Peace Pagoda, Bhubaneswar</p>
+    </div>
+
+    <div class="card">
+      <img src="images/monastery.jpg" alt="Ratnagiri Monastery">
+      <p>Ratnagiri Buddhist Monastery, Jajpur</p>
+    </div>
+
+    <div class="card">
+      <img src="images/kapilash.jpg" alt="Kapilash Temple">
+      <p>Kapilash Temple, Dhenkanal</p>
+    </div>
+
+  </div>
+</section>
+
+
+<section class="mission-container">
+    <div class="mission-text">
+        <h2>The Mission Behind the Vault</h2>
+        <p>E-Heritage Vault started with a simple vision: to make cultural heritage as accessible as Instagram and as permanent as history itself.</p>
+        <p>We focus on underexplored regions to give their stories a global stage.</p>
+        <p>Every click, upload, and share is a step towards preserving the soul of our past.</p>
+    </div>
+
+    <div class="community-section">
+        <div class="image-column">
+            <img src="images/pattachitra.jpg" alt="Pattachitra Art" class="community-img">
+
+        </div>
+
+        <div class="text-column">
+            <p class="hashtag"># Community-Driven Content</p>
+            <h3>A Movement Powered by People</h3>
+            <p>
+                Every photo, every story, every click — it's our community that brings the E-Heritage Vault to life.
+                From passionate travelers to local historians, we're building a living record of monuments that deserve the world's attention.
+            </p>
+            <p>
+                Be part of the legacy. Your next upload could be the next monument saved.
+            </p>
+            <button class="join-btn">Join Now</button>
+        </div>
+    </div>
+</section>
+
+<!-- Small behavior script: ensure Explore enforces login flow (no UI changes) -->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  // find any element that links to monuments / explore and ensure login
+  const exploreAnchors = Array.from(document.querySelectorAll('a')).filter(a =>
+    /monuments|explore|Explore|monuments.html/i.test(a.getAttribute('href') || a.innerText)
+  );
+
+  exploreAnchors.forEach(a => {
+    a.addEventListener('click', function (e) {
+      // if already logged in, allow normal behavior
+      if (sessionStorage.getItem('isLoggedIn') === 'true') return;
+      // otherwise force login page
+      e.preventDefault();
+      window.location.href = 'login.html';
+    });
+  });
+});
+</script>
+
+</body>
+</html>

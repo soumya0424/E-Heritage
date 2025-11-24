@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>E-Heritage Vault - Odisha Tourism</title>
+
+<style>
+/* your original CSS preserved exactly as uploaded (no UI changes) */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; background: linear-gradient(to bottom right, #fff7ed, #fef3c7); min-height: 100vh; }
+.page { display: none; } .page.active { display: block; }
+
+header { background: rgba(255,255,255,0.8); backdrop-filter: blur(10px); box-shadow: 0 2px 4px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 50; }
+.header-content { max-width: 1400px; margin: 0 auto; padding: 1rem 2rem; display:flex; justify-content:space-between; align-items:center; }
+.logo { font-size:1.5rem; font-weight:bold; color:#9a3412; }
+
+nav { display:flex; gap:1.5rem; font-size:.875rem; align-items:center; }
+nav a { color:#374151; text-decoration:none; } 
+nav a:hover { color:#ea580c; }
+
+.search-box { display:flex; align-items:center; background:white; border:2px solid #e5e7eb; border-radius:9999px; padding:.5rem 1rem; }
+.search-box input { border:none; outline:none; background:transparent; width:200px; }
+
+.user-info { display:flex; gap:1rem; align-items:center; }
+.welcome-text { font-weight:500; color:#374151; }
+.logout-btn { background:#ef4444; color:white; padding:8px 16px; border-radius:8px; border:none; cursor:pointer; }
+.logout-btn:hover { background:#dc2626; }
+
+/* Hero */
+.hero { position:relative; height:500px; overflow:hidden; }
+.hero-bg { position:absolute; inset:0; background-size:cover; background-position:center; cursor:pointer; }
+.hero-overlay { position:absolute; inset:0; background:linear-gradient(to bottom, rgba(0,0,0,.4), rgba(0,0,0,.6)); }
+.hero-content { position:absolute; inset:0; display:flex; justify-content:center; align-items:flex-start; padding-top:120px; }
+.hero-box { background:rgba(255,255,255,0.9); padding:2rem; border-radius:1rem; max-width:600px; }
+
+/* Main Content */
+.container { max-width:1400px; margin:2rem auto; padding:2rem; }
+.title { text-align:center; font-size:1.875rem; margin-bottom:3rem; }
+
+/* Cards */
+.cards-grid { display:grid; grid-template-columns:1fr 1fr; gap:2rem; justify-content:center; }
+.card { background:white; padding:1rem; border-radius:12px; text-align:center; cursor:pointer; }
+
+/* Buttons */
+.btn { background:#111827; color:white; padding:12px 24px; border-radius:999px; border:none; cursor:pointer; }
+.btn:hover { background:#1f2937; }
+
+/* Discovery */
+.section { margin-top:3rem; }
+.scroll-container { display:flex; gap:1rem; overflow-x:auto; }
+.discovery-card { min-width:140px; padding:20px; background:#e5e7eb; border-radius:12px; text-align:center; cursor:pointer; }
+
+/* Destinations */
+.back-btn { background:none; border:none; font-size:1rem; cursor:pointer; margin-bottom:1rem; }
+.dest-card { background:white; border-radius:12px; overflow:hidden; display:flex; margin-bottom:2rem; cursor:pointer; }
+.dest-image { width:300px; height:230px; object-fit:cover; }
+.dest-info { padding:1rem; }
+
+/* Loading & Error States */
+.loading { text-align:center; padding:3rem; color:#6b7280; font-size:1.1rem; }
+.error { text-align:center; padding:3rem; color:#dc2626; }
+
+/* ----------- MODAL POPUP ---------------- */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.55);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    animation: fadeIn .25s ease-out;
+}
+
+.modal-box {
+    background: white;
+    width: 600px;
+    max-width: 90%;
+    padding: 20px;
+    border-radius: 14px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.25);
+    animation: popUp .25s ease-out;
+}
+
+.modal-close {
+    float: right;
+    font-size: 22px;
+    cursor: pointer;
+    color: #555;
+}
+.modal-close:hover { color: #000; }
+
+.modal-img {
+    width: 100%;
+    height: 270px;
+    border-radius: 12px;
+    object-fit: cover;
+    margin-bottom: 15px;
+}
+.modal-widgets {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+.modal-widgets .btn {
+    flex: 1;
+}
+
+/* Animations */
+@keyframes fadeIn { from {opacity:0;} to {opacity:1;} }
+@keyframes popUp { from {transform:scale(.8); opacity:0;} to {transform:scale(1); opacity:1;} }
+
+</style>
+
+</head>
+
+<body>
+
+<!-- HOME PAGE -->
+<div id="homePage" class="page active">
+
+<header>
+    <div class="header-content">
+        <h1 class="logo">E-Heritage Vault</h1>
+
+        <nav>
+            <a href="#">Find Your Site</a>
+
+            <div class="search-box">
+                <input type="text" id="searchInputHome" placeholder="Search monuments...">
+                <span>🔍</span>
+            </div>
+
+            <a href="#">📍</a>
+
+            <div class="user-info">
+                <span class="welcome-text" id="welcomeText">Welcome</span>
+                <button class="logout-btn" onclick="logout()">Logout</button>
+            </div>
+        </nav>
+    </div>
+</header>
+
+<div class="hero">
+    <div class="hero-bg" id="heroBg" style="background-image:url('Konark-Sun-Temple.webp');"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+        <div class="hero-box">
+            <h2>Heritage</h2>
+            <h3>Treasures Await</h3>
+            <h3>Around You</h3>
+            <p>Discover ancient temples, forts & archaeological wonders.</p>
+            <p style="font-size:14px;color:#444;">Click the image behind to view more.</p>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+
+    <h2 class="title">Let's Find Your Perfect Heritage Adventure</h2>
+
+    <div class="cards-grid">
+
+        <div class="card" id="heroCard">
+            <img src="Odisha-Ancient-Monuments.webp" class="dest-image">
+            <h3>Find monuments near you</h3>
+        </div>
+
+        <div class="card">
+            <img src="odisha-districts.webp" class="dest-image">
+            <h3>Get instant directions</h3>
+        </div>
+
+    </div>
+
+    <div style="text-align:center; margin-top:2rem;">
+        <button class="btn" onclick="showPage('destinations')">Find Monuments Near Me</button>
+    </div>
+
+    <div class="section">
+        <h3>Discovery by Region</h3>
+        <div class="scroll-container">
+            <div class="discovery-card" data-region="north">North</div>
+            <div class="discovery-card" data-region="south">South</div>
+            <div class="discovery-card" data-region="east">East</div>
+            <div class="discovery-card" data-region="west">West</div>
+        </div>
+    </div>
+
+</div></div>
+
+<!-- DESTINATIONS PAGE -->
+<div id="destinationsPage" class="page">
+
+<header>
+    <div class="header-content">
+        <h1 class="logo">E-Heritage Vault</h1>
+
+        <nav>
+            <div class="search-box">
+                <input type="text" id="searchInputDest" placeholder="Search monuments...">
+                <span>🔍</span>
+            </div>
+
+            <div class="user-info">
+                <span class="welcome-text" id="welcomeText2">Welcome</span>
+                <button class="logout-btn" onclick="logout()">Logout</button>
+            </div>
+        </nav>
+    </div>
+</header>
+
+<div class="container">
+
+    <button class="back-btn" onclick="showPage('home')">← Back</button>
+
+    <h2 class="title" style="text-align:left;">Destinations Near You</h2>
+
+    <div id="destinationsContainer">
+        <div class="loading">Loading nearby monuments...</div>
+    </div>
+
+</div>
+</div>
+
+<!-- MODAL POPUP -->
+<div id="monumentModal" class="modal-overlay">
+    <div class="modal-box">
+        <span id="modalClose" class="modal-close">&times;</span>
+        <img id="modalImg" class="modal-img" src="">
+        <h2 id="modalTitle"></h2>
+        <p id="modalDesc" style="color:#444;"></p>
+
+        <div class="modal-widgets">
+            <button id="modalLog" class="btn">Logistics</button>
+            <button id="modalRest" class="btn">Restaurants</button>
+            <button id="modalStay" class="btn">Stay</button>
+        </div>
+    </div>
+</div>
+
+<script>
+// ==================== CONFIGURATION ====================
+const API_BASE_URL = 'http://localhost:3000/api';
+let currentMonumentData = null;
+let allMonuments = []; // Store fetched monuments
+let filteredMonuments = []; // Store filtered results
+
+// ==================== INITIALIZATION ====================
+window.onload = function(){
+    // Set welcome message
+    let u = sessionStorage.getItem("loggedInUser") || "Guest";
+    document.getElementById("welcomeText").innerText = "Welcome, " + u;
+    document.getElementById("welcomeText2").innerText = "Welcome, " + u;
+    
+    // Load initial monument data for hero cycling
+    loadMonumentsForHero();
+};
+
+// ==================== PAGE NAVIGATION ====================
+function showPage(pageName) {
+    document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+    document.getElementById(pageName + "Page").classList.add("active");
+    window.scrollTo(0, 0);
+    
+    // Load monuments when switching to destinations page
+    if (pageName === 'destinations') {
+        loadNearbyMonuments();
+    }
+}
+
+function logout() {
+    sessionStorage.clear();
+    alert("Logged out!");
+    window.location.href = "index.html";
+}
+
+// ==================== API INTEGRATION ====================
+
+// Load monuments for hero image cycling (doesn't need geolocation)
+async function loadMonumentsForHero() {
+    try {
+        const response = await fetch(`${API_BASE_URL}/monuments`);
+        const result = await response.json();
+        
+        if (result.success && result.data) {
+            allMonuments = result.data;
+            console.log('Loaded monuments for hero:', allMonuments.length);
+        }
+    } catch (error) {
+        console.error('Error loading monuments for hero:', error);
+        // Keep default hero image if API fails
+    }
+}
+
+// Get user location and load nearby monuments
+function loadNearbyMonuments() {
+    const container = document.getElementById('destinationsContainer');
+    container.innerHTML = '<div class="loading">📍 Getting your location...</div>';
+    
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            async (position) => {
+                const userLat = position.coords.latitude;
+                const userLon = position.coords.longitude;
+                
+                console.log('User location:', userLat, userLon);
+                
+                container.innerHTML = '<div class="loading">🔍 Finding monuments near you...</div>';
+                
+                try {
+                    const response = await fetch(
+                        `${API_BASE_URL}/monuments/nearby?latitude=${userLat}&longitude=${userLon}&radius=200`
+                    );
+                    const result = await response.json();
+                    
+                    console.log('API Response:', result);
+                    
+                    if (result.success && result.data) {
+                        allMonuments = result.data;
+                        filteredMonuments = result.data;
+                        displayMonuments(result.data);
+                    } else {
+                        showError('Failed to load monuments');
+                    }
+                } catch (error) {
+                    console.error('Error fetching nearby monuments:', error);
+                    // Fallback to all monuments
+                    loadAllMonuments();
+                }
+            },
+            (error) => {
+                console.error('Geolocation error:', error);
+                container.innerHTML = '<div class="loading">📍 Location access denied. Loading all monuments...</div>';
+                // Fallback to all monuments
+                setTimeout(loadAllMonuments, 1000);
+            }
+        );
+    } else {
+        container.innerHTML = '<div class="loading">📍 Geolocation not supported. Loading all monuments...</div>';
+        setTimeout(loadAllMonuments, 1000);
+    }
+}
+
+// Fallback: Load all monuments without distance sorting
+async function loadAllMonuments() {
+    const container = document.getElementById('destinationsContainer');
+    try {
+        const response = await fetch(`${API_BASE_URL}/monuments`);
+        const result = await response.json();
+        if (result.success && result.data) {
+            allMonuments = result.data;
+            filteredMonuments = result.data;
+            displayMonuments(result.data);
+        }
+    } catch (error) {
+        console.error('Error loading all monuments:', error);
+        showError('Unable to connect to server. Please make sure the backend is running on http://localhost:3000');
+    }
+}
+
+// Display monuments in the grid
+function displayMonuments(monuments) {
+    const container = document.getElementById('destinationsContainer');
+    
+    if (!monuments || monuments.length === 0) {
+        container.innerHTML = '<div class="error">❌ No monuments found</div>';
+        return;
+    }
+    
+    container.innerHTML = monuments.map(monument => {
+        const distanceBadge = monument.distanceText ? 
+            `<span style="display:inline-block;background:#fef3c7;color:#9a3412;padding:0.25rem 0.75rem;border-radius:9999px;font-size:0.75rem;font-weight:600;margin-top:0.5rem;">📍 ${monument.distanceText}</span>` 
+            : '';
+        
+        return `
+        <div class="dest-card" data-monument-id="${monument.id}">
+            <img src="${monument.image || 'images/default-monument.jpg'}" class="dest-image" 
+                 onerror="this.src='https://via.placeholder.com/300x230?text=${encodeURIComponent(monument.name)}'">
+            <div class="dest-info">
+                <h3>${monument.name}</h3>
+                <p>${monument.description || monument.city + ', ' + monument.state}</p>
+                ${distanceBadge}
+            </div>
+        </div>
+        `;
+    }).join('');
+    
+    // Attach click handlers to all destination cards
+    attachCardClicks();
+}
+
+// Show error message
+function showError(message) {
+    const container = document.getElementById('destinationsContainer');
+    container.innerHTML = `<div class="error">❌ ${message}</div>`;
+}
+
+// ==================== MODAL FUNCTIONALITY ====================
+const modal = document.getElementById("monumentModal");
+const modalImg = document.getElementById("modalImg");
+const modalTitle = document.getElementById("modalTitle");
+const modalDesc = document.getElementById("modalDesc");
+const modalLog = document.getElementById("modalLog");
+const modalRest = document.getElementById("modalRest");
+const modalStay = document.getElementById("modalStay");
+
+document.getElementById("modalClose").onclick = () => modal.style.display = "none";
+modal.onclick = e => { if(e.target === modal) modal.style.display = "none"; };
+
+function openModal(monument) {
+    console.log('Opening modal for:', monument);
+    currentMonumentData = monument;
+    
+    modalImg.src = monument.image || 'https://via.placeholder.com/600x270?text=' + encodeURIComponent(monument.name);
+    modalImg.onerror = function() {
+        this.src = 'https://via.placeholder.com/600x270?text=' + encodeURIComponent(monument.name);
+    };
+    modalTitle.textContent = monument.name;
+    modalDesc.textContent = monument.description || monument.city + ', ' + monument.state;
+    
+    // ===== CRITICAL: Setup button click handlers with coordinates =====
+    // These buttons redirect to separate facility pages with monument coordinates
+    modalLog.onclick = () => {
+        const url = `Logistic.html?lat=${monument.latitude}&lon=${monument.longitude}&name=${encodeURIComponent(monument.name)}`;
+        console.log('Redirecting to logistics:', url);
+        window.location.href = url;
+    };
+    
+    modalRest.onclick = () => {
+        const url = `Resturants.html?lat=${monument.latitude}&lon=${monument.longitude}&name=${encodeURIComponent(monument.name)}`;
+        console.log('Redirecting to restaurants:', url);
+        window.location.href = url;
+    };
+    
+    modalStay.onclick = () => {
+        const url = `stay.html?lat=${monument.latitude}&lon=${monument.longitude}&name=${encodeURIComponent(monument.name)}`;
+        console.log('Redirecting to stays:', url);
+        window.location.href = url;
+    };
+    
+    modal.style.display = "flex";
+}
+
+// Attach click handlers to destination cards
+function attachCardClicks() {
+    document.querySelectorAll(".dest-card").forEach(card => {
+        card.onclick = () => {
+            const monumentId = parseInt(card.getAttribute("data-monument-id"));
+            const monument = allMonuments.find(m => m.id === monumentId);
+            if (monument) {
+                openModal(monument);
+            } else {
+                console.error('Monument not found:', monumentId);
+            }
+        };
+    });
+}
+
+// ==================== HERO SECTION ====================
+const heroBg = document.getElementById("heroBg");
+let heroIndex = 0;
+
+// Cycle through monument images on hero click
+heroBg.addEventListener("click", () => {
+    if (allMonuments.length > 0) {
+        heroIndex = (heroIndex + 1) % allMonuments.length;
+        const monument = allMonuments[heroIndex];
+        heroBg.style.backgroundImage = `url('${monument.image}')`;
+        heroBg.onerror = function() {
+            heroBg.style.backgroundImage = `url('https://via.placeholder.com/1200x500?text=${encodeURIComponent(monument.name)}')`;
+        };
+    }
+});
+
+// Open destinations page from hero card
+document.getElementById("heroCard").onclick = () => showPage("destinations");
+
+// ==================== SEARCH FUNCTIONALITY ====================
+const searchInputHome = document.getElementById("searchInputHome");
+const searchInputDest = document.getElementById("searchInputDest");
+
+searchInputHome.addEventListener("input", function() {
+    handleSearch(this.value);
+});
+
+searchInputDest.addEventListener("input", function() {
+    handleSearch(this.value);
+});
+
+function handleSearch(query) {
+    query = query.trim().toLowerCase();
+    
+    // If search is empty, show all monuments
+    if (query === "") {
+        filteredMonuments = allMonuments;
+        displayMonuments(allMonuments);
+        return;
+    }
+    
+    // Filter monuments
+    const results = allMonuments.filter(m =>
+        m.name.toLowerCase().includes(query) ||
+        (m.city && m.city.toLowerCase().includes(query)) ||
+        (m.state && m.state.toLowerCase().includes(query)) ||
+        (m.description && m.description.toLowerCase().includes(query)) ||
+        (m.type && m.type.toLowerCase().includes(query))
+    );
+    
+    filteredMonuments = results;
+    
+    // Display results
+    if (results.length === 0) {
+        const container = document.getElementById('destinationsContainer');
+        container.innerHTML = `
+            <p style="text-align:center; font-size:18px; color:#555; margin-top:20px;">
+                No monuments found matching "<b>${query}</b>"
+            </p>
+        `;
+        return;
+    }
+    
+    displayMonuments(results);
+    
+    // Always switch to destinations page when searching
+    showPage("destinations");
+}
+
+// ==================== REGION FILTERING ====================
+document.querySelectorAll(".discovery-card").forEach(btn => {
+    btn.onclick = () => {
+        const region = btn.getAttribute("data-region");
+        
+        console.log('Filtering by region:', region);
+        
+        // Filter by region - check if monuments have region property
+        // If not, we can filter by state or just show all
+        const list = allMonuments.filter(m => {
+            // Try to match region in various ways
+            if (m.region && m.region.toLowerCase() === region) return true;
+            if (m.state && m.state.toLowerCase().includes(region)) return true;
+            // You can add more filtering logic here based on your data
+            return false;
+        });
+        
+        filteredMonuments = list.length > 0 ? list : allMonuments;
+        
+        if (list.length > 0) {
+            displayMonuments(list);
+        } else {
+            // If no region filter matches, just show all
+            displayMonuments(allMonuments);
+        }
+        
+        showPage("destinations");
+    };
+});
+
+</script>
+
+</body>
+</html>

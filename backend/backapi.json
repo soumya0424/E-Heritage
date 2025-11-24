@@ -1,0 +1,16 @@
+{
+  "success": true,
+  "data": [
+    {
+      "id": "konark",
+      "name": "Konark Sun Temple",
+      "latitude": 19.8876,
+      "longitude": 86.0945,
+      "image": "konark.jpg",
+      "description": "UNESCO World Heritage Site...",
+      "city": "Konark",
+      "state": "Odisha",
+      "distanceText": "12.5 km" // Optional, calculated by backend
+    }
+  ]
+}
